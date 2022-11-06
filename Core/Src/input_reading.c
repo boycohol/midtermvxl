@@ -87,7 +87,7 @@ void generateStartValue() {
 				flagButtonPressedMore1s[i] = flagTimeout = 0;
 		TimeForPressKey[i] = DURATION_FOR_PRESSED;
 		TimeForWaiting[i] = DURATION_FOR_WAITING;
-		TimeForPressKeyMore1s[i] = DURATION_FOR_AUTO_INCREASING;
+		TimeForPressKeyMore1s[i] = 0;
 		status = 0;
 	}
 }
@@ -116,12 +116,10 @@ void buttons_reading() {
 				if (buttonBuffer[i] == PRESSED_STATE) {
 					flagButtonPressed[i] = 1;
 					TimeForPressKey[i] = DURATION_FOR_PRESSED;
-					TimeForPressKeyMore1s[i] = DURATION_FOR_AUTO_INCREASING;
+
 					//todo, push and release
 				} else {
 					flagButtonPressed[i] = 0;
-					flagButtonPressed3s[i]=0;
-					flagButtonPressedMore1s[i]=0;
 					TimeForWaiting[i]--;
 					if (TimeForWaiting[i] == 0) {
 						//if time-out 10s
@@ -130,16 +128,15 @@ void buttons_reading() {
 					}
 				}
 			} else {
-				if (flagButtonPressed3s[i] == 0) {
-					TimeForPressKey[i]--;
-					if (TimeForPressKey[i] == 0) {
-						if (buttonBuffer[i] == PRESSED_STATE) {
-							//if pressed
-							flagButtonPressed3s[i] = 1;
+				TimeForPressKey[i]--;
+				if (TimeForPressKey[i] == 0) {
+					if (buttonBuffer[i] == PRESSED_STATE) {
+						//if pressed
+						flagButtonPressed3s[i] = 1;
+						TimeForPressKeyMore1s[i] = DURATION_FOR_AUTO_INCREASING;
 
-						} else {
-							flagButtonPressed3s[i] = 0;
-						}
+					} else {
+						flagButtonPressed3s[i] = 0;
 					}
 				} else {
 					TimeForPressKeyMore1s[i]--;
